@@ -1,42 +1,17 @@
 services:
   - type: web
-    name: smartkutubxona-ai-backend
-    runtime: python
+    name: Resurs_platform
+    runtime: docker
     plan: free
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /healthz
     autoDeployTrigger: commit
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: smartkutubxona-db
-          property: connectionString
       - key: JWT_SECRET
         generateValue: true
       - key: UPLOAD_DIR
         value: uploads
       - key: FRONTEND_URL
-        value: https://smartkutubxona-ai-frontend.onrender.com
+        value: https://resurs-platform.onrender.com
       - key: BACKEND_URL
-        value: https://smartkutubxona-ai-backend.onrender.com
-
-  - type: web
-    name: smartkutubxona-ai-frontend
-    runtime: node
-    plan: free
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
-    autoDeployTrigger: commit
-    envVars:
-      - key: NEXT_PUBLIC_API_URL
-        value: https://smartkutubxona-ai-backend.onrender.com
-      - key: NODE_ENV
-        value: production
-
-databases:
-  - name: smartkutubxona-db
-    databaseName: smartkutubxona
-    user: smartkutubxona
+        value: https://resurs-platform.onrender.com

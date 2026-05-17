@@ -59,7 +59,7 @@ export default function RoleDashboardPage() {
   async function fetchUsers() {
     const token = localStorage.getItem("token");
     if (!token) return;
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}/api/users`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/users`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (response.ok) setUsers(await response.json());
