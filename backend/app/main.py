@@ -27,6 +27,7 @@ from .schemas import (
 )
 from .security import create_access_token, decode_access_token, hash_password, verify_password
 from .bootstrap import ensure_bootstrap_admin
+from .catalog import ensure_default_catalog
 from .settings import settings
 
 
@@ -66,6 +67,7 @@ def startup() -> None:
     db = SessionLocal()
     try:
         ensure_bootstrap_admin(db)
+        ensure_default_catalog(db)
     finally:
         db.close()
 
