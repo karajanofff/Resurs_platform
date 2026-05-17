@@ -5,7 +5,20 @@ from .security import hash_password
 
 
 def seed_demo_data(db: Session) -> None:
+    demo_users = {
+        "admin@example.com": ("Platforma administratori", "admin123", "admin"),
+        "teacher@example.com": ("Dilshod Karimov", "teacher123", "teacher"),
+    }
+
+    for email, (full_name, password, role) in demo_users.items():
+        user = db.query(User).filter(User.email == email).first()
+        if user:
+            user.full_name = full_name
+            user.role = role
+            user.password_hash = hash_password(password)
+
     if db.query(User).count():
+        db.commit()
         return
 
     admin = User(full_name="Platforma administratori", email="admin@example.com", password_hash=hash_password("admin123"), role="admin")
