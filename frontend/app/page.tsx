@@ -17,7 +17,7 @@ export default function LandingPage() {
         <div className="relative mx-auto flex min-h-[88vh] max-w-7xl flex-col justify-between px-6 py-8 lg:px-10">
           <nav className="flex items-center justify-between">
             <div className="text-xl font-semibold">SmartKutubxona AI</div>
-            <Link href="/login" className="rounded-2xl border border-white/25 px-4 py-2 text-sm">
+            <Link href="/dashboard/teacher" className="rounded-2xl border border-white/25 px-4 py-2 text-sm">
               Kirish
             </Link>
           </nav>
@@ -29,7 +29,7 @@ export default function LandingPage() {
               Ta'lim resurslarini fan mavzulariga mosligini NLP yordamida avtomatik baholovchi aqlli elektron kutubxona platformasi
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/login" className="rounded-2xl bg-white px-5 py-3 font-semibold text-forest-700">
+              <Link href="/dashboard/teacher" className="rounded-2xl bg-white px-5 py-3 font-semibold text-forest-700">
                 Boshlash
               </Link>
             </div>

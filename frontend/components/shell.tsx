@@ -7,13 +7,11 @@ import {
   Brain,
   LayoutDashboard,
   LibraryBig,
-  LogOut,
   Search,
   Settings,
   UploadCloud,
   Users,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { Role, User } from "@/lib/types";
 
@@ -50,14 +48,6 @@ export function DashboardShell({
   onViewChange: (view: string) => void;
   children: ReactNode;
 }) {
-  const router = useRouter();
-
-  function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    router.push("/login");
-  }
-
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(219,244,227,0.75),_transparent_32%),#f7fbf8] lg:grid lg:grid-cols-[288px_1fr]">
       <aside className="flex min-h-screen flex-col bg-gradient-to-b from-forest-700 to-forest-800 p-5 text-white">
@@ -87,10 +77,6 @@ export function DashboardShell({
         <div className="mt-auto rounded-3xl border border-white/10 bg-white/10 p-4">
           <p className="text-sm font-semibold">{user.full_name}</p>
           <p className="mt-1 text-xs capitalize text-emerald-100">{role}</p>
-          <button onClick={logout} className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-forest-700">
-            <LogOut className="h-4 w-4" />
-            Chiqish
-          </button>
         </div>
       </aside>
       <main>

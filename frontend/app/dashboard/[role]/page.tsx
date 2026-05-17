@@ -3,15 +3,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
-  AdminOverview,
   ResourceTable,
   SubjectCards,
-  SubjectManager,
   TeacherDashboard,
   TeacherUpload,
-  UserPanel,
 } from "@/components/dashboard-content";
-import { OverviewCharts } from "@/components/charts";
 import { DashboardShell, menus } from "@/components/shell";
 import { Card } from "@/components/ui";
 import { api } from "@/lib/api";
@@ -25,8 +21,12 @@ export default function RoleDashboardPage() {
   const allowedViews = menus[role]?.map((item) => item.key) ?? [];
   const requestedView = searchParams.get("view");
   const activeView = requestedView && allowedViews.includes(requestedView) ? requestedView : "dashboard";
-  const [user, setUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const [user, setUser] = useState<User | null>({
+    id: 0,
+    full_name: "Ochiq foydalanuvchi",
+    email: "",
+    role: "teacher",
+  });
   const [statistics, setStatistics] = useState<Statistics | null>(null);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -34,36 +34,17 @@ export default function RoleDashboardPage() {
   const [latestAnalysis, setLatestAnalysis] = useState<Analysis | null>(null);
 
   useEffect(() => {
-    const raw = localStorage.getItem("user");
-    if (!raw) {
-      router.push("/login");
+    if (role !== "teacher") {
+      router.push("/dashboard/teacher");
       return;
     }
-    const stored = JSON.parse(raw) as User;
-    if (stored.role !== role) {
-      router.push(`/dashboard/${stored.role}`);
-      return;
-    }
-    setUser(stored);
-    Promise.all([api.statistics(), api.subjects(), api.topics(), api.resources(), api.me()]).then(([stats, subjectList, topicList, resourceList]) => {
+    Promise.all([api.statistics(), api.subjects(), api.topics(), api.resources()]).then(([stats, subjectList, topicList, resourceList]) => {
       setStatistics(stats);
       setSubjects(subjectList);
       setTopics(topicList);
       setResources(resourceList);
     });
-    if (role === "admin") {
-      fetchUsers();
-    }
   }, [role, router]);
-
-  async function fetchUsers() {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? ""}/api/users`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (response.ok) setUsers(await response.json());
-  }
 
   function changeView(view: string) {
     router.push(`/dashboard/${role}?view=${view}`);
@@ -73,20 +54,12 @@ export default function RoleDashboardPage() {
 
   return (
     <DashboardShell role={role} user={user} activeView={activeView} onViewChange={changeView}>
-      {role === "admin" && activeView === "dashboard" && <AdminOverview statistics={statistics} resources={resources} />}
-      {role === "admin" && activeView === "subjects" && <SubjectManager subjects={subjects} onCreated={(subject) => setSubjects((current) => [...current, subject])} />}
-      {role === "admin" && activeView === "users" && <UserPanel users={users} />}
-      {role === "admin" && activeView === "resources" && <ResourceTable title="Barcha resurslar" resources={resources} />}
-      {role === "admin" && activeView === "analysis" && <ResourceTable title="NLP tahlil natijalari" resources={resources} />}
-      {role === "admin" && activeView === "statistics" && <OverviewCharts />}
-      {role === "admin" && activeView === "settings" && <InfoCard title="Sozlamalar" text="Environment, JWT va deploy sozlamalari README orqali boshqariladi." />}
-
       {role === "teacher" && activeView === "dashboard" && <TeacherDashboard subjects={subjects} topics={topics} resources={resources} latestAnalysis={latestAnalysis} />}
       {role === "teacher" && activeView === "subjects" && <SubjectCards subjects={subjects} />}
       {role === "teacher" && activeView === "upload" && <TeacherUpload onAnalyzed={setLatestAnalysis} />}
       {role === "teacher" && activeView === "analysis" && <InfoCard title="Tahlil natijalari" text={latestAnalysis ? `${latestAnalysis.similarity_score}% - ${latestAnalysis.result_status}` : "Hozircha yangi tahlil bajarilmadi."} />}
       {role === "teacher" && activeView === "library" && <ResourceTable title="Elektron kutubxona" resources={resources} />}
-      {role === "teacher" && activeView === "profile" && <InfoCard title="Profil" text={`${user.full_name} - ${user.email}`} />}
+      {role === "teacher" && activeView === "profile" && <InfoCard title="Profil" text="Ochiq foydalanish rejimi" />}
 
     </DashboardShell>
   );

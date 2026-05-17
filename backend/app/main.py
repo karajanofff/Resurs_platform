@@ -203,7 +203,6 @@ def delete_topic(topic_id: int, db: Session = Depends(get_db), _: User = Depends
 async def upload_resource(
     title: str = Form(...),
     file: UploadFile = File(...),
-    user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ):
     suffix = Path(file.filename or "").suffix.lower()
@@ -229,11 +228,22 @@ async def upload_resource(
     best_topic = max(related_topics, key=lambda topic: calculate_similarity(text, f"{topic.title} {topic.description} {topic.keywords}")) if related_topics else None
     score = calculate_similarity(text, subject_profiles[best_subject.id])
     result_status, _ = generate_recommendation(score, keywords)
+    public_user = db.query(User).filter(User.email == "public@local").first()
+    if not public_user:
+        public_user = User(
+            full_name="Ochiq foydalanuvchi",
+            email="public@local",
+            password_hash=hash_password("public-access-disabled"),
+            role="teacher",
+        )
+        db.add(public_user)
+        db.commit()
+        db.refresh(public_user)
     resource = Resource(
         title=title,
         file_url=f"/uploads/{destination.name}",
         file_type=suffix.replace(".", "").upper(),
-        uploaded_by=user.id,
+        uploaded_by=public_user.id,
         subject_id=best_subject.id,
         topic_id=best_topic.id if best_topic else topics[0].id,
         extracted_text=text,
@@ -284,7 +294,7 @@ def delete_resource(resource_id: int, db: Session = Depends(get_db), _: User = D
 
 
 @app.post("/api/analyze", response_model=AnalysisOut)
-def analyze(resource_id: int = Form(...), db: Session = Depends(get_db), _: User = Depends(current_user)):
+def analyze(resource_id: int = Form(...), db: Session = Depends(get_db)):
     resource = db.get(Resource, resource_id)
     if not resource:
         raise HTTPException(404, "Resurs topilmadi")
