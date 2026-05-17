@@ -182,8 +182,8 @@ export function TeacherUpload({
       onAnalyzed(result);
       localStorage.setItem("latestAnalysis", JSON.stringify(result));
       setMessage("Tahlil muvaffaqiyatli yakunlandi.");
-    } catch {
-      setMessage("Tahlil bajarilmadi. Fayl yoki server holatini tekshiring.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Tahlil bajarilmadi.");
     } finally {
       setLoading(false);
     }

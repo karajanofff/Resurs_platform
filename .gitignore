@@ -22,3 +22,6 @@ __pycache__/
 
 # Local databases
 *.db
+
+# Runtime uploads
+backend/uploads/

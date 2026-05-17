@@ -50,6 +50,11 @@ def healthz() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/api/version")
+def version() -> dict[str, str]:
+    return {"version": "2026-05-17-public-analysis-v2"}
+
+
 @app.get("/")
 def root() -> dict[str, str]:
     return {
@@ -223,7 +228,11 @@ async def upload_resource(
         db.refresh(public_user)
     destination = settings.upload_path / f"{Path(file.filename or 'resource').stem}-{public_user.id}{suffix}"
     destination.write_bytes(await file.read())
-    text = extract_text_from_file(destination)
+    try:
+        text = extract_text_from_file(destination)
+    except Exception as exc:
+        destination.unlink(missing_ok=True)
+        raise HTTPException(400, "Fayl matnini o'qib bo'lmadi") from exc
     keywords = extract_keywords(text)
     subjects = db.query(Subject).all()
     if not subjects:
@@ -302,6 +311,8 @@ def analyze(resource_id: int = Form(...), db: Session = Depends(get_db)):
         raise HTTPException(404, "Resurs topilmadi")
     subjects = db.query(Subject).all()
     topics = db.query(Topic).all()
+    if not subjects or not topics:
+        raise HTTPException(400, "Tahlil uchun fan va mavzular mavjud bo'lishi kerak")
     subject_profiles = {
         subject.id: " ".join(
             [subject.name, subject.description]
