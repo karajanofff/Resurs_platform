@@ -11,6 +11,14 @@ class UserCreate(BaseModel):
     role: str
 
 
+class TeacherRegisterRequest(BaseModel):
+    full_name: str
+    email: EmailStr
+    password: str
+
+    model_config = {"extra": "forbid"}
+
+
 class UserOut(BaseModel):
     id: int
     full_name: str

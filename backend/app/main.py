@@ -21,6 +21,7 @@ from .schemas import (
     TokenResponse,
     TopicCreate,
     TopicOut,
+    TeacherRegisterRequest,
     UserCreate,
     UserOut,
 )
@@ -78,10 +79,15 @@ def current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_
 
 
 @app.post("/api/auth/register", response_model=UserOut)
-def register(payload: UserCreate, db: Session = Depends(get_db)):
+def register(payload: TeacherRegisterRequest, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == payload.email).first():
         raise HTTPException(400, "Bu email allaqachon mavjud")
-    user = User(**payload.model_dump(exclude={"password"}), password_hash=hash_password(payload.password))
+    user = User(
+        full_name=payload.full_name,
+        email=payload.email,
+        password_hash=hash_password(payload.password),
+        role="teacher",
+    )
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -110,7 +116,15 @@ def list_users(db: Session = Depends(get_db), _: User = Depends(current_user)):
 
 @app.post("/api/users", response_model=UserOut)
 def create_user(payload: UserCreate, db: Session = Depends(get_db), _: User = Depends(current_user)):
-    return register(payload, db)
+    if payload.role not in {"admin", "teacher"}:
+        raise HTTPException(400, "Rol noto'g'ri")
+    if db.query(User).filter(User.email == payload.email).first():
+        raise HTTPException(400, "Bu email allaqachon mavjud")
+    user = User(**payload.model_dump(exclude={"password"}), password_hash=hash_password(payload.password))
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
 
 
 @app.get("/api/subjects", response_model=list[SubjectOut])

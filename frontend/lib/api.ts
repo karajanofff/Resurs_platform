@@ -23,6 +23,11 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  registerTeacher: (payload: { full_name: string; email: string; password: string }) =>
+    request<User>("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
   login: (email: string, password: string, role: string) =>
     request<{ access_token: string; user: User }>("/api/auth/login", {
       method: "POST",
