@@ -8,5 +8,6 @@
 !**/.env.example
 **/__pycache__/
 **/*.py[cod]
+**/*.db
 frontend/.next/
 frontend/node_modules/

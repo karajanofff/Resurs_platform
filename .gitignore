@@ -19,3 +19,6 @@ pnpm-debug.log*
 # Python cache files
 __pycache__/
 *.py[cod]
+
+# Local databases
+*.db
