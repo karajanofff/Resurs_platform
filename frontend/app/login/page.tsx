@@ -5,16 +5,11 @@ import { FormEvent, useState } from "react";
 import { api } from "@/lib/api";
 import { Role } from "@/lib/types";
 
-const demos = {
-  admin: ["admin@example.com", "admin123"],
-  teacher: ["teacher@example.com", "teacher123"],
-};
-
 export default function LoginPage() {
   const router = useRouter();
   const [role, setRole] = useState<Role>("admin");
-  const [email, setEmail] = useState(demos.admin[0]);
-  const [password, setPassword] = useState(demos.admin[1]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   async function submit(event: FormEvent) {
@@ -31,8 +26,6 @@ export default function LoginPage() {
 
   function chooseRole(nextRole: Role) {
     setRole(nextRole);
-    setEmail(demos[nextRole][0]);
-    setPassword(demos[nextRole][1]);
   }
 
   return (
@@ -62,11 +55,6 @@ export default function LoginPage() {
         </label>
         {error && <p className="mt-4 text-sm text-rose-600">{error}</p>}
         <button className="mt-6 w-full rounded-2xl bg-forest-700 px-4 py-3 font-semibold text-white hover:bg-forest-800">Kirish</button>
-        <div className="mt-6 rounded-2xl bg-emerald-50 p-4 text-sm text-slate-600">
-          <p className="font-semibold text-forest-700">Demo loginlar</p>
-          <p>Admin: admin@example.com / admin123</p>
-          <p>O'qituvchi: teacher@example.com / teacher123</p>
-        </div>
       </form>
     </main>
   );

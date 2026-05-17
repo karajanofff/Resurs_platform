@@ -15,3 +15,9 @@ services:
         value: https://resurs-platform.onrender.com
       - key: BACKEND_URL
         value: https://resurs-platform.onrender.com
+      - key: BOOTSTRAP_ADMIN_NAME
+        sync: false
+      - key: BOOTSTRAP_ADMIN_EMAIL
+        sync: false
+      - key: BOOTSTRAP_ADMIN_PASSWORD
+        sync: false

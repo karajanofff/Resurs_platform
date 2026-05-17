@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
     backend_url: str = "http://localhost:8000"
     access_token_minutes: int = 60 * 24
+    bootstrap_admin_name: str | None = None
+    bootstrap_admin_email: str | None = None
+    bootstrap_admin_password: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

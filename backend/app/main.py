@@ -25,7 +25,7 @@ from .schemas import (
     UserOut,
 )
 from .security import create_access_token, decode_access_token, hash_password, verify_password
-from .seed import seed_demo_data
+from .bootstrap import ensure_bootstrap_admin
 from .settings import settings
 
 
@@ -64,7 +64,7 @@ def startup() -> None:
     settings.upload_path.mkdir(parents=True, exist_ok=True)
     db = SessionLocal()
     try:
-        seed_demo_data(db)
+        ensure_bootstrap_admin(db)
     finally:
         db.close()
 
