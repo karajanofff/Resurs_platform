@@ -2,9 +2,12 @@ services:
   - type: web
     name: smartkutubxona-ai-backend
     runtime: python
+    plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -22,9 +25,11 @@ services:
   - type: web
     name: smartkutubxona-ai-frontend
     runtime: node
+    plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
     startCommand: npm run start
+    autoDeployTrigger: commit
     envVars:
       - key: NEXT_PUBLIC_API_URL
         value: https://smartkutubxona-ai-backend.onrender.com
@@ -35,4 +40,3 @@ databases:
   - name: smartkutubxona-db
     databaseName: smartkutubxona
     user: smartkutubxona
-

@@ -18,6 +18,10 @@ class Settings(BaseSettings):
         return Path(self.upload_dir)
 
     @property
+    def frontend_urls(self) -> list[str]:
+        return [url.strip() for url in self.frontend_url.split(",") if url.strip()]
+
+    @property
     def sqlalchemy_database_url(self) -> str:
         if self.database_url.startswith("postgresql://"):
             return self.database_url.replace("postgresql://", "postgresql+psycopg://", 1)

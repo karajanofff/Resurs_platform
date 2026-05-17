@@ -33,7 +33,7 @@ settings.upload_path.mkdir(parents=True, exist_ok=True)
 app = FastAPI(title="SmartKutubxona AI API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:3000"],
+    allow_origins=[*settings.frontend_urls, "http://localhost:3000"],
     allow_origin_regex=r"^http://(localhost|127\.0\.0\.1):\d+$",
     allow_credentials=True,
     allow_methods=["*"],
@@ -41,6 +41,11 @@ app.add_middleware(
 )
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 app.mount("/uploads", StaticFiles(directory=settings.upload_path), name="uploads")
+
+
+@app.get("/healthz")
+def healthz() -> dict[str, str]:
+    return {"status": "ok"}
 
 
 @app.on_event("startup")
