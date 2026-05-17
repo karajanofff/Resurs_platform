@@ -210,7 +210,18 @@ async def upload_resource(
     suffix = Path(file.filename or "").suffix.lower()
     if suffix not in {".pdf", ".docx", ".pptx", ".txt"}:
         raise HTTPException(400, "Faqat PDF, DOCX, PPTX yoki TXT fayl yuklang")
-    destination = settings.upload_path / f"{Path(file.filename or 'resource').stem}-{user.id}{suffix}"
+    public_user = db.query(User).filter(User.email == "public@local").first()
+    if not public_user:
+        public_user = User(
+            full_name="Ochiq foydalanuvchi",
+            email="public@local",
+            password_hash=hash_password("public-access-disabled"),
+            role="teacher",
+        )
+        db.add(public_user)
+        db.commit()
+        db.refresh(public_user)
+    destination = settings.upload_path / f"{Path(file.filename or 'resource').stem}-{public_user.id}{suffix}"
     destination.write_bytes(await file.read())
     text = extract_text_from_file(destination)
     keywords = extract_keywords(text)
@@ -230,17 +241,6 @@ async def upload_resource(
     best_topic = max(related_topics, key=lambda topic: calculate_similarity(text, f"{topic.title} {topic.description} {topic.keywords}")) if related_topics else None
     score = calculate_similarity(text, subject_profiles[best_subject.id])
     result_status, _ = generate_recommendation(score, keywords)
-    public_user = db.query(User).filter(User.email == "public@local").first()
-    if not public_user:
-        public_user = User(
-            full_name="Ochiq foydalanuvchi",
-            email="public@local",
-            password_hash=hash_password("public-access-disabled"),
-            role="teacher",
-        )
-        db.add(public_user)
-        db.commit()
-        db.refresh(public_user)
     resource = Resource(
         title=title,
         file_url=f"/uploads/{destination.name}",
