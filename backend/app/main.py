@@ -48,6 +48,16 @@ def healthz() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/")
+def root() -> dict[str, str]:
+    return {
+        "service": "SmartKutubxona AI API",
+        "status": "ok",
+        "docs": "/docs",
+        "health": "/healthz",
+    }
+
+
 @app.on_event("startup")
 def startup() -> None:
     Base.metadata.create_all(bind=engine)
