@@ -183,7 +183,16 @@ export function TeacherUpload({
       localStorage.setItem("latestAnalysis", JSON.stringify(result));
       setMessage("Tahlil muvaffaqiyatli yakunlandi.");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Tahlil bajarilmadi.");
+      if (error instanceof Error) {
+        try {
+          const parsed = JSON.parse(error.message) as { detail?: string };
+          setMessage(parsed.detail ?? error.message);
+        } catch {
+          setMessage(error.message);
+        }
+      } else {
+        setMessage("Tahlil bajarilmadi.");
+      }
     } finally {
       setLoading(false);
     }

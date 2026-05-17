@@ -232,7 +232,10 @@ async def upload_resource(
         text = extract_text_from_file(destination)
     except Exception as exc:
         destination.unlink(missing_ok=True)
-        raise HTTPException(400, "Fayl matnini o'qib bo'lmadi") from exc
+        raise HTTPException(400, f"{suffix.upper().replace('.', '')} fayl matnini o'qib bo'lmadi") from exc
+    if not text.strip():
+        destination.unlink(missing_ok=True)
+        raise HTTPException(400, "Fayldan matn topilmadi")
     keywords = extract_keywords(text)
     subjects = db.query(Subject).all()
     if not subjects:
