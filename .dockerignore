@@ -1,9 +1,0 @@
-.git
-.gitignore
-.env
-venv/
-__pycache__/
-*.pyc
-database.db
-app/uploads/*
-!app/uploads/.gitkeep
