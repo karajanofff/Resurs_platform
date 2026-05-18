@@ -323,3 +323,18 @@ def download(resource_id: int, request: Request, db: Session = Depends(get_db)):
     if not resource:
         raise HTTPException(status_code=404, detail="Resurs topilmadi")
     return FileResponse(UPLOAD_DIR / resource.file_path, filename=resource.file_path)
+
+
+@app.post("/resources/{resource_id}/delete")
+def delete_resource(resource_id: int, request: Request, db: Session = Depends(get_db)):
+    user = require_user(request, db)
+    if isinstance(user, RedirectResponse) or user.role != "admin":
+        return RedirectResponse("/login", status_code=303)
+    resource = db.get(Resource, resource_id)
+    if not resource:
+        raise HTTPException(status_code=404, detail="Resurs topilmadi")
+    file_path = UPLOAD_DIR / resource.file_path
+    db.delete(resource)
+    db.commit()
+    file_path.unlink(missing_ok=True)
+    return RedirectResponse("/resources", status_code=303)

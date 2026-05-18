@@ -9,8 +9,26 @@
 </form>
 <div class="mt-6 overflow-hidden rounded-xl border bg-white">
   <table class="w-full text-left text-sm">
-    <thead class="bg-slate-100"><tr><th class="p-3">Resurs</th><th class="p-3">Foiz</th><th class="p-3">Status</th><th class="p-3"></th></tr></thead>
-    <tbody>{% for resource in resources %}<tr class="border-t"><td class="p-3">{{ resource.title }}</td><td class="p-3">{{ resource.similarity_score }}%</td><td class="p-3">{{ resource.status }}</td><td class="p-3"><a href="/download/{{ resource.id }}" class="text-emerald-800">Yuklab olish</a></td></tr>{% endfor %}</tbody>
+    <thead class="bg-slate-100"><tr><th class="p-3">Resurs</th><th class="p-3">Foiz</th><th class="p-3">Status</th><th class="p-3">Amallar</th></tr></thead>
+    <tbody>
+      {% for resource in resources %}
+      <tr class="border-t">
+        <td class="p-3">{{ resource.title }}</td>
+        <td class="p-3">{{ resource.similarity_score }}%</td>
+        <td class="p-3">{{ resource.status }}</td>
+        <td class="p-3">
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="/download/{{ resource.id }}" class="text-emerald-800">Yuklab olish</a>
+            {% if user.role == "admin" %}
+            <form method="post" action="/resources/{{ resource.id }}/delete">
+              <button class="text-red-600">O'chirish</button>
+            </form>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </div>
 {% endblock %}
