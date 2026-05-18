@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="text-2xl font-bold">Tahlil natijasi</h2>
-<div class="mt-6 max-w-3xl rounded-xl border bg-white p-5">
+<div class="mb-6">
+  <p class="muted-label">NLP tahlil</p>
+  <h2 class="page-title mt-1 text-3xl font-bold">Tahlil natijasi</h2>
+</div>
+<div class="panel mt-6 max-w-3xl rounded-xl p-5">
   <p class="text-sm text-slate-500">Eng yaqin natija: {{ subject.name }} / {{ topic.title }}</p>
   <h3 class="mt-2 text-xl font-semibold">{{ resource.title }}</h3>
   <div class="mt-5 h-3 overflow-hidden rounded-full bg-slate-200"><div class="h-full bg-emerald-700" style="width: {{ resource.similarity_score }}%"></div></div>
@@ -10,7 +13,7 @@
   <p class="mt-4 text-slate-600">{{ resource.recommendation }}</p>
   <p class="mt-4 text-sm text-slate-500">Kalit so'zlar: {{ resource.keywords }}</p>
 </div>
-<div class="mt-6 max-w-3xl rounded-xl border bg-white p-5">
+<div class="panel mt-6 max-w-3xl rounded-xl p-5">
   <h3 class="font-semibold">Fanlar bo'yicha moslik</h3>
   <div class="mt-4 grid gap-4">
     {% for item in predictions %}

@@ -10,9 +10,12 @@
 <body class="bg-slate-50 text-slate-900">
 {% if user %}
 <div class="min-h-screen md:grid md:grid-cols-[250px_1fr]">
-  <aside class="bg-emerald-950 p-5 text-white">
-    <h1 class="text-xl font-semibold">SmartKutubxona AI</h1>
-    <p class="mt-1 text-sm text-emerald-100">{{ user.full_name }} · {{ user.role }}</p>
+  <aside class="bg-emerald-950 p-5 text-white md:min-h-screen">
+    <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+      <p class="text-xs uppercase tracking-wide text-emerald-200">Platforma</p>
+      <h1 class="mt-2 text-xl font-semibold">SmartKutubxona AI</h1>
+      <p class="mt-2 text-sm text-emerald-100">{{ user.full_name }} · {{ user.role }}</p>
+    </div>
     <nav class="mt-8 grid gap-2 text-sm">
       <a href="/dashboard" class="rounded-lg px-3 py-2 hover:bg-white/10">Dashboard</a>
       {% if user.role == "admin" %}<a href="/subjects" class="rounded-lg px-3 py-2 hover:bg-white/10">Fanlar</a>{% endif %}
@@ -24,7 +27,9 @@
       <a href="/logout" class="rounded-lg px-3 py-2 hover:bg-white/10">Chiqish</a>
     </nav>
   </aside>
-  <main class="p-5 md:p-8">{% block content %}{% endblock %}</main>
+  <main class="p-5 md:p-8">
+    <div class="mx-auto max-w-6xl">{% block content %}{% endblock %}</div>
+  </main>
 </div>
 {% else %}
 {% block public_content %}{% endblock %}

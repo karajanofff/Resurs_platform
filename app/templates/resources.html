@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="text-2xl font-bold">Resurslar katalogi</h2>
-<form class="mt-6 grid gap-3 rounded-xl border bg-white p-4 md:grid-cols-4">
+<div class="mb-6">
+  <p class="muted-label">Elektron kutubxona</p>
+  <h2 class="page-title mt-1 text-3xl font-bold">Resurslar katalogi</h2>
+</div>
+<form class="panel mt-6 grid gap-3 rounded-xl p-4 md:grid-cols-4">
   <select name="subject_id" class="rounded-lg border px-3 py-2"><option value="">Barcha fanlar</option>{% for subject in subjects %}<option value="{{ subject.id }}">{{ subject.name }}</option>{% endfor %}</select>
   <select name="topic_id" class="rounded-lg border px-3 py-2"><option value="">Barcha mavzular</option>{% for topic in topics %}<option value="{{ topic.id }}">{{ topic.title }}</option>{% endfor %}</select>
   <select name="status" class="rounded-lg border px-3 py-2"><option value="">Barcha statuslar</option><option>Mos</option><option>Qisman mos</option><option>Mos emas</option></select>
   <button class="rounded-lg bg-emerald-800 px-4 py-2 text-white">Filtrlash</button>
 </form>
-<div class="mt-6 overflow-hidden rounded-xl border bg-white">
+<div class="panel mt-6 overflow-hidden rounded-xl">
   <table class="w-full text-left text-sm">
     <thead class="bg-slate-100"><tr><th class="p-3">Resurs</th><th class="p-3">Foiz</th><th class="p-3">Status</th><th class="p-3">Amallar</th></tr></thead>
     <tbody>
@@ -15,7 +18,7 @@
       <tr class="border-t">
         <td class="p-3">{{ resource.title }}</td>
         <td class="p-3">{{ resource.similarity_score }}%</td>
-        <td class="p-3">{{ resource.status }}</td>
+        <td class="p-3"><span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">{{ resource.status }}</span></td>
         <td class="p-3">
           <div class="flex flex-wrap items-center gap-3">
             <a href="/download/{{ resource.id }}" class="text-emerald-800">Yuklab olish</a>
