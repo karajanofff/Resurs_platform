@@ -6,24 +6,29 @@ from .settings import settings
 
 
 def ensure_bootstrap_admin(db: Session) -> None:
-    if db.query(User).count():
-        return
+    defaults = [
+        (
+            settings.bootstrap_admin_name or "Administrator",
+            settings.bootstrap_admin_email or "admin@example.com",
+            settings.bootstrap_admin_password or "admin123",
+            "admin",
+        ),
+        ("O'qituvchi", "teacher@example.com", "teacher123", "teacher"),
+    ]
 
-    if not all(
-        [
-            settings.bootstrap_admin_name,
-            settings.bootstrap_admin_email,
-            settings.bootstrap_admin_password,
-        ]
-    ):
-        return
-
-    db.add(
-        User(
-            full_name=settings.bootstrap_admin_name,
-            email=settings.bootstrap_admin_email,
-            password_hash=hash_password(settings.bootstrap_admin_password),
-            role="admin",
+    for full_name, email, password, role in defaults:
+        user = db.query(User).filter(User.email == email).first()
+        if user:
+            user.full_name = full_name
+            user.role = role
+            user.password_hash = hash_password(password)
+            continue
+        db.add(
+            User(
+                full_name=full_name,
+                email=email,
+                password_hash=hash_password(password),
+                role=role,
+            )
         )
-    )
     db.commit()

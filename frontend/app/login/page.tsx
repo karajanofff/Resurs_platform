@@ -91,6 +91,13 @@ export default function LoginPage() {
         >
           {mode === "login" ? "O'qituvchi sifatida ro'yxatdan o'tish" : "Login oynasiga qaytish"}
         </button>
+        {mode === "login" && (
+          <div className="mt-6 rounded-2xl bg-emerald-50 p-4 text-sm text-slate-600">
+            <p className="font-semibold text-forest-700">Kirish ma'lumotlari</p>
+            <p>Admin: admin@example.com / admin123</p>
+            <p>O'qituvchi: teacher@example.com / teacher123</p>
+          </div>
+        )}
       </form>
     </main>
   );
