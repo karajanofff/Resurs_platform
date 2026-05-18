@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block public_content %}
+<section class="grid min-h-screen place-items-center bg-emerald-900 p-5">
+  <form method="post" class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+    <h1 class="text-2xl font-bold">Tizimga kirish</h1>
+    {% if error %}<p class="mt-4 text-sm text-red-600">{{ error }}</p>{% endif %}
+    <label class="mt-5 block text-sm">Email<input name="email" type="email" required class="mt-2 w-full rounded-lg border px-3 py-2"></label>
+    <label class="mt-4 block text-sm">Parol<input name="password" type="password" required class="mt-2 w-full rounded-lg border px-3 py-2"></label>
+    <button class="mt-5 w-full rounded-lg bg-emerald-800 px-4 py-3 font-semibold text-white">Kirish</button>
+    <div class="mt-5 rounded-lg bg-emerald-50 p-4 text-sm text-slate-700">
+      <p class="font-semibold">Demo loginlar</p>
+      <p>Admin: admin@example.com / admin123</p>
+      <p>O'qituvchi: teacher@example.com / teacher123</p>
+      <p>Talaba: student@example.com / student123</p>
+    </div>
+  </form>
+</section>
+{% endblock %}

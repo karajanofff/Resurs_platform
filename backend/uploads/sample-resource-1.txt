@@ -1,1 +1,0 @@
-NLP texnologiyalari tabiiy tilni qayta ishlash, tokenizatsiya va cosine similarity bilan bogliq.

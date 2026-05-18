@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-2xl font-bold">Resurslar katalogi</h2>
+<form class="mt-5 flex flex-wrap gap-3">
+  <select name="subject_id" class="rounded-lg border px-3 py-2"><option value="">Barcha fanlar</option>{% for subject in subjects %}<option value="{{ subject.id }}">{{ subject.name }}</option>{% endfor %}</select>
+  <select name="topic_id" class="rounded-lg border px-3 py-2"><option value="">Barcha mavzular</option>{% for topic in topics %}<option value="{{ topic.id }}">{{ topic.title }}</option>{% endfor %}</select>
+  <select name="status" class="rounded-lg border px-3 py-2"><option value="">Barcha statuslar</option><option>Mos</option><option>Qisman mos</option><option>Mos emas</option></select>
+  <button class="rounded-lg bg-emerald-800 px-4 py-2 text-white">Filter</button>
+</form>
+<div class="mt-6 overflow-x-auto rounded-xl border">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50"><tr><th class="p-3">Nomi</th><th>Foiz</th><th>Status</th><th>Yuklab olish</th></tr></thead>
+    <tbody>{% for resource in resources %}<tr class="border-t"><td class="p-3">{{ resource.title }}</td><td>{{ resource.similarity_score }}%</td><td>{{ resource.status }}</td><td><a class="text-emerald-800" href="/download/{{ resource.id }}">Yuklash</a></td></tr>{% endfor %}</tbody>
+  </table>
+</div>
+{% endblock %}

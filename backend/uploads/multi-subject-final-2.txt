@@ -1,5 +1,0 @@
-Tabiiy tilni qayta ishlash tokenizatsiya va cosine similarity bilan bog'liq.
-
-Jadval, normalizatsiya va ER diagramma ma'lumotlar bazasini loyihalashda muhim.
-
-Firewall, vpn va shifrlash tarmoq xavfsizligida qo'llanadi.

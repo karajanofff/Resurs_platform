@@ -1,27 +1,7 @@
-# Dependencies
-node_modules/
-
-# Next.js build output
-.next/
-out/
-
-# Local environment files
-.env
-.env.*
-!.env.example
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Python cache files
+venv/
 __pycache__/
-*.py[cod]
-
-# Local databases
-*.db
-
-# Runtime uploads
-backend/uploads/
+*.pyc
+.env
+app/uploads/*
+!app/uploads/.gitkeep
+database.db

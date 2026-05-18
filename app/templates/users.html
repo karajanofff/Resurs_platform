@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-2xl font-bold">Foydalanuvchilar</h2>
+<div class="mt-5 overflow-x-auto rounded-xl border">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50"><tr><th class="p-3">F.I.Sh.</th><th>Email</th><th>Rol</th></tr></thead>
+    <tbody>{% for item in users %}<tr class="border-t"><td class="p-3">{{ item.full_name }}</td><td>{{ item.email }}</td><td>{{ item.role }}</td></tr>{% endfor %}</tbody>
+  </table>
+</div>
+{% endblock %}

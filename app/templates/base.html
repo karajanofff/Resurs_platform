@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartKutubxona AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-white text-slate-900">
+  {% if user %}
+  <div class="min-h-screen md:grid md:grid-cols-[240px_1fr]">
+    <aside class="bg-emerald-900 p-5 text-white">
+      <h1 class="text-xl font-semibold">SmartKutubxona AI</h1>
+      <nav class="mt-8 grid gap-2 text-sm">
+        <a href="/dashboard" class="rounded-lg px-3 py-2 hover:bg-white/10">Dashboard</a>
+        {% if user.role == "admin" %}<a href="/subjects" class="rounded-lg px-3 py-2 hover:bg-white/10">Fanlar</a>{% endif %}
+        {% if user.role == "admin" %}<a href="/topics" class="rounded-lg px-3 py-2 hover:bg-white/10">Mavzular</a>{% endif %}
+        {% if user.role in ["admin", "teacher"] %}<a href="/upload" class="rounded-lg px-3 py-2 hover:bg-white/10">Resurs yuklash</a>{% endif %}
+        <a href="/resources" class="rounded-lg px-3 py-2 hover:bg-white/10">Resurslar katalogi</a>
+        {% if user.role == "admin" %}<a href="/results" class="rounded-lg px-3 py-2 hover:bg-white/10">NLP natijalar</a>{% endif %}
+        {% if user.role == "admin" %}<a href="/users" class="rounded-lg px-3 py-2 hover:bg-white/10">Foydalanuvchilar</a>{% endif %}
+        <a href="/logout" class="rounded-lg px-3 py-2 hover:bg-white/10">Chiqish</a>
+      </nav>
+    </aside>
+    <main class="p-5 md:p-8">{% block content %}{% endblock %}</main>
+  </div>
+  {% else %}
+  <main>{% block public_content %}{% endblock %}</main>
+  {% endif %}
+</body>
+</html>
