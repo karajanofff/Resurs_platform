@@ -55,19 +55,24 @@ def context(request: Request, user: User | None = None, **extra):
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("index.html", context(request))
+    return templates.TemplateResponse(request=request, name="index.html", context=context(request))
 
 
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
-    return templates.TemplateResponse("login.html", context(request))
+    return templates.TemplateResponse(request=request, name="login.html", context=context(request))
 
 
 @app.post("/login")
 def login(request: Request, email: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
     if not user or not verify_password(password, user.password_hash):
-        return templates.TemplateResponse("login.html", context(request, error="Email yoki parol noto'g'ri"), status_code=401)
+        return templates.TemplateResponse(
+            request=request,
+            name="login.html",
+            context=context(request, error="Email yoki parol noto'g'ri"),
+            status_code=401,
+        )
     response = RedirectResponse("/dashboard", status_code=303)
     response.set_cookie("access_token", create_token(user.email), httponly=True, samesite="lax")
     return response
@@ -85,7 +90,11 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
     user = require_user(request, db)
     if isinstance(user, RedirectResponse):
         return user
-    return templates.TemplateResponse("dashboard.html", context(request, user, stats=dashboard_stats(db)))
+    return templates.TemplateResponse(
+        request=request,
+        name="dashboard.html",
+        context=context(request, user, stats=dashboard_stats(db)),
+    )
 
 
 @app.get("/subjects", response_class=HTMLResponse)
@@ -93,7 +102,11 @@ def subjects_page(request: Request, db: Session = Depends(get_db)):
     user = require_user(request, db)
     if isinstance(user, RedirectResponse) or user.role != "admin":
         return RedirectResponse("/login", status_code=303)
-    return templates.TemplateResponse("subjects.html", context(request, user, subjects=db.query(Subject).all()))
+    return templates.TemplateResponse(
+        request=request,
+        name="subjects.html",
+        context=context(request, user, subjects=db.query(Subject).all()),
+    )
 
 
 @app.post("/subjects")
@@ -112,8 +125,9 @@ def topics_page(request: Request, db: Session = Depends(get_db)):
     if isinstance(user, RedirectResponse) or user.role != "admin":
         return RedirectResponse("/login", status_code=303)
     return templates.TemplateResponse(
-        "topics.html",
-        context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all()),
+        request=request,
+        name="topics.html",
+        context=context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all()),
     )
 
 
@@ -140,8 +154,9 @@ def upload_page(request: Request, db: Session = Depends(get_db)):
     if isinstance(user, RedirectResponse) or user.role not in {"admin", "teacher"}:
         return RedirectResponse("/login", status_code=303)
     return templates.TemplateResponse(
-        "upload.html",
-        context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all()),
+        request=request,
+        name="upload.html",
+        context=context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all()),
     )
 
 
@@ -161,8 +176,9 @@ def upload_resource(
     suffix = Path(file.filename or "").suffix.lower()
     if suffix not in {".pdf", ".docx", ".pptx", ".txt"} or not topic or topic.subject_id != subject_id:
         return templates.TemplateResponse(
-            "upload.html",
-            context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all(), error="Fayl turi yoki mavzu noto'g'ri"),
+            request=request,
+            name="upload.html",
+            context=context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all(), error="Fayl turi yoki mavzu noto'g'ri"),
             status_code=400,
         )
     safe_name = f"{Path(file.filename or 'resource').stem}-{uuid4().hex[:10]}{suffix}"
@@ -174,8 +190,9 @@ def upload_resource(
     except Exception:
         destination.unlink(missing_ok=True)
         return templates.TemplateResponse(
-            "upload.html",
-            context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all(), error="Fayldan matn ajratib bo'lmadi"),
+            request=request,
+            name="upload.html",
+            context=context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all(), error="Fayldan matn ajratib bo'lmadi"),
             status_code=400,
         )
     analysis = analyze_resource(extracted_text, topic.title, topic.description, topic.keywords)
@@ -207,8 +224,9 @@ def result_page(resource_id: int, request: Request, db: Session = Depends(get_db
     if not resource:
         raise HTTPException(status_code=404, detail="Resurs topilmadi")
     return templates.TemplateResponse(
-        "result.html",
-        context(request, user, resource=resource, subject=db.get(Subject, resource.subject_id), topic=db.get(Topic, resource.topic_id)),
+        request=request,
+        name="result.html",
+        context=context(request, user, resource=resource, subject=db.get(Subject, resource.subject_id), topic=db.get(Topic, resource.topic_id)),
     )
 
 
@@ -231,8 +249,9 @@ def resources_page(
     if status:
         query = query.filter(Resource.status == status)
     return templates.TemplateResponse(
-        "resources.html",
-        context(
+        request=request,
+        name="resources.html",
+        context=context(
             request,
             user,
             resources=query.order_by(Resource.created_at.desc()).all(),
@@ -247,7 +266,11 @@ def results_page(request: Request, db: Session = Depends(get_db)):
     user = require_user(request, db)
     if isinstance(user, RedirectResponse) or user.role != "admin":
         return RedirectResponse("/login", status_code=303)
-    return templates.TemplateResponse("results.html", context(request, user, resources=db.query(Resource).all()))
+    return templates.TemplateResponse(
+        request=request,
+        name="results.html",
+        context=context(request, user, resources=db.query(Resource).all()),
+    )
 
 
 @app.get("/users", response_class=HTMLResponse)
@@ -255,7 +278,11 @@ def users_page(request: Request, db: Session = Depends(get_db)):
     user = require_user(request, db)
     if isinstance(user, RedirectResponse) or user.role != "admin":
         return RedirectResponse("/login", status_code=303)
-    return templates.TemplateResponse("users.html", context(request, user, users=db.query(User).all()))
+    return templates.TemplateResponse(
+        request=request,
+        name="users.html",
+        context=context(request, user, users=db.query(User).all()),
+    )
 
 
 @app.get("/download/{resource_id}")
