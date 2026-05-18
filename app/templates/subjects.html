@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="grid gap-6 lg:grid-cols-2">
-  <section class="rounded-xl border p-5">
-    <h2 class="text-xl font-semibold">Fan qo'shish</h2>
-    <form method="post" action="/subjects" class="mt-4 grid gap-3">
-      <input name="name" required placeholder="Fan nomi" class="rounded-lg border px-3 py-2">
-      <textarea name="description" placeholder="Tavsif" class="rounded-lg border px-3 py-2"></textarea>
-      <button class="rounded-lg bg-emerald-800 px-4 py-2 text-white">Saqlash</button>
-    </form>
-  </section>
-  <section class="rounded-xl border p-5">
-    <h2 class="text-xl font-semibold">Fanlar ro'yxati</h2>
-    <div class="mt-4 grid gap-3">{% for subject in subjects %}<div class="rounded-lg bg-slate-50 p-3"><strong>{{ subject.name }}</strong><p class="text-sm text-slate-600">{{ subject.description }}</p></div>{% endfor %}</div>
-  </section>
+<h2 class="text-2xl font-bold">Fanlar</h2>
+<div class="mt-6 grid gap-6 lg:grid-cols-[360px_1fr]">
+  <form method="post" class="rounded-xl border bg-white p-5">
+    <h3 class="font-semibold">Fan qo'shish</h3>
+    <input name="name" required placeholder="Fan nomi" class="mt-4 w-full rounded-lg border px-3 py-2">
+    <textarea name="description" placeholder="Tavsif" class="mt-3 w-full rounded-lg border px-3 py-2"></textarea>
+    <button class="mt-3 rounded-lg bg-emerald-800 px-4 py-2 text-white">Saqlash</button>
+  </form>
+  <div class="rounded-xl border bg-white p-5">
+    {% for subject in subjects %}
+    <div class="border-b py-3 last:border-0"><p class="font-semibold">{{ subject.name }}</p><p class="text-sm text-slate-500">{{ subject.description }}</p></div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

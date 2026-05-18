@@ -4,35 +4,29 @@ from .auth import hash_password
 from .models import Resource, Subject, Topic, User
 
 
-def seed_initial_data(db: Session) -> None:
+def seed_data(db: Session) -> None:
     users = [
         ("Admin", "admin@example.com", "admin123", "admin"),
         ("O'qituvchi", "teacher@example.com", "teacher123", "teacher"),
         ("Talaba", "student@example.com", "student123", "student"),
     ]
     for full_name, email, password, role in users:
-        existing_user = db.query(User).filter(User.email == email).first()
-        if not existing_user:
-            db.add(User(full_name=full_name, email=email, password_hash=hash_password(password), role=role))
-        else:
-            existing_user.full_name = full_name
-            existing_user.password_hash = hash_password(password)
-            existing_user.role = role
-    if not db.query(Subject).count():
-        subjects = [
-            Subject(name="Sun'iy intellekt", description="AI va NLP yo'nalishlari"),
-            Subject(name="Ma'lumotlar bazasi", description="Relatsion modellar"),
-            Subject(name="Kompyuter tarmoqlari", description="Tarmoq arxitekturasi"),
+        db.add(User(full_name=full_name, email=email, password_hash=hash_password(password), role=role))
+
+    subjects = [
+        Subject(name="Sun'iy intellekt", description="AI va tabiiy tilni qayta ishlash"),
+        Subject(name="Ma'lumotlar bazasi", description="Relatsion ma'lumotlar bazasi"),
+        Subject(name="Kompyuter tarmoqlari", description="Tarmoq va xavfsizlik"),
+    ]
+    db.add_all(subjects)
+    db.flush()
+    db.add_all(
+        [
+            Topic(subject_id=subjects[0].id, title="NLP texnologiyalari", description="tokenizatsiya tf idf tabiiy tilni qayta ishlash", keywords="nlp tokenizatsiya tf idf"),
+            Topic(subject_id=subjects[1].id, title="Normalizatsiya", description="jadval bog'lanish normal forma", keywords="jadval normalizatsiya"),
+            Topic(subject_id=subjects[2].id, title="Tarmoq xavfsizligi", description="vpn firewall shifrlash", keywords="vpn firewall"),
         ]
-        db.add_all(subjects)
-        db.flush()
-        db.add_all(
-            [
-                Topic(subject_id=subjects[0].id, title="NLP texnologiyalari", description="tabiiy tilni qayta ishlash, tokenizatsiya, tf-idf", keywords="nlp, tokenizatsiya, tf-idf"),
-                Topic(subject_id=subjects[1].id, title="Normalizatsiya", description="jadval, bog'lanish, ER model", keywords="jadval, normalizatsiya"),
-                Topic(subject_id=subjects[2].id, title="Tarmoq xavfsizligi", description="firewall, vpn, shifrlash", keywords="vpn, firewall"),
-            ]
-        )
+    )
     db.commit()
 
 

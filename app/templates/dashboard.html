@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <h2 class="text-2xl font-bold">Dashboard</h2>
-<div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-{% for label, value in [("Jami fanlar", stats.subjects), ("Jami mavzular", stats.topics), ("Jami resurslar", stats.resources), ("Mos resurslar", stats.matched), ("Qisman mos", stats.partial), ("Mos emas", stats.unmatched)] %}
-  <div class="rounded-xl border p-5"><p class="text-sm text-slate-500">{{ label }}</p><p class="mt-2 text-3xl font-bold">{{ value }}</p></div>
-{% endfor %}
+<div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+  {% for label, value in [("Jami fanlar", stats.subjects), ("Jami mavzular", stats.topics), ("Jami resurslar", stats.resources), ("Mos", stats.matched), ("Qisman mos", stats.partial), ("Mos emas", stats.unmatched)] %}
+  <div class="rounded-xl border bg-white p-5 shadow-sm"><p class="text-sm text-slate-500">{{ label }}</p><p class="mt-2 text-3xl font-bold">{{ value }}</p></div>
+  {% endfor %}
 </div>
 {% endblock %}

@@ -1,8 +1,15 @@
 # SmartKutubxona AI
 
-Ta'lim resurslarini fan mavzulariga mosligini TF-IDF va cosine similarity yordamida avtomatik baholovchi yengil web-platforma.
+Ta'lim resurslarining fan mavzulariga tegishliligini `TF-IDF` va `cosine similarity` yordamida avtomatik baholovchi yengil web-platforma.
 
-## Local ishga tushirish
+## Texnologiyalar
+
+- FastAPI, Jinja2, SQLite, SQLAlchemy
+- scikit-learn TF-IDF + cosine similarity
+- PDF, DOCX, PPTX, TXT matn ajratish
+- Tailwind CSS CDN
+
+## Lokal ishga tushirish
 
 ```bash
 python -m venv venv
@@ -13,65 +20,24 @@ uvicorn app.main:app --reload
 
 Brauzerda `http://127.0.0.1:8000` ni oching.
 
-## Virtual environment
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-## Requirements o'rnatish
-
-```bash
-pip install -r requirements.txt
-```
-
-## Uvicorn bilan ishga tushirish
-
-```bash
-uvicorn app.main:app --reload
-```
-
-## GitHub ga yuklash
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin <repository-url>
-git push -u origin main
-```
-
-## Render.com ga joylash
-
-1. Repository ni GitHub ga push qiling.
-2. Render'da `New` -> `Blueprint` ni tanlang.
-3. Repository ni ulang.
-4. Render `render.yaml` faylidan servisni yaratadi.
-5. `SECRET_KEY` environment variable qo'shing.
-6. Yangi servis `Python` runtime bilan yaratiladi; Docker ishlatilmaydi.
-
 ## Demo loginlar
 
 - Admin: `admin@example.com / admin123`
 - O'qituvchi: `teacher@example.com / teacher123`
 - Talaba: `student@example.com / student123`
 
-## Platformadan foydalanish tartibi
+## Foydalanish tartibi
 
-1. Login orqali tizimga kiring.
-2. Admin fan va mavzular qo'shadi.
-3. O'qituvchi fan va mavzuni tanlab PDF, DOCX, PPTX yoki TXT fayl yuklaydi.
-4. Tizim fayldan matn ajratadi, matnni tozalaydi, TF-IDF vektor yaratadi va cosine similarity hisoblaydi.
-5. Natija foiz, status, kalit so'zlar va tavsiya ko'rinishida chiqadi.
-6. Talaba katalogdan resurslarni filter qilib ko'radi va yuklab oladi.
+1. Admin fan va mavzularni boshqaradi.
+2. O'qituvchi resurs yuklaydi va NLP tahlilni ishga tushiradi.
+3. Tizim fayldan matn ajratadi, moslik foizini hisoblaydi, kalit so'zlarni chiqaradi.
+4. Talaba katalogdan mos resurslarni ko'radi va yuklab oladi.
 
-## NLP mexanizmi
+## Render deploy
 
-- `clean_text`
-- `extract_keywords`
-- `calculate_similarity`
-- `analyze_resource`
+1. Loyihani GitHub ga yuklang.
+2. Render'da `New` -> `Blueprint` ni tanlang.
+3. Repository ni ulang.
+4. Render `render.yaml` orqali servisni yaratadi.
 
-Og'ir model ishlatilmaydi. Faqat `scikit-learn` asosidagi TF-IDF va cosine similarity ishlatiladi.
+`RESET_DB_ON_START=true` Render free filesystemi uchun ataylab qo'yilgan: har yangi ishga tushishda baza toza yaratilib, demo foydalanuvchilar va boshlang'ich fanlar qayta seed qilinadi.

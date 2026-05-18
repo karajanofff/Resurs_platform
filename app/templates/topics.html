@@ -1,19 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="grid gap-6 lg:grid-cols-2">
-  <section class="rounded-xl border p-5">
-    <h2 class="text-xl font-semibold">Mavzu qo'shish</h2>
-    <form method="post" action="/topics" class="mt-4 grid gap-3">
-      <select name="subject_id" class="rounded-lg border px-3 py-2">{% for subject in subjects %}<option value="{{ subject.id }}">{{ subject.name }}</option>{% endfor %}</select>
-      <input name="title" required placeholder="Mavzu nomi" class="rounded-lg border px-3 py-2">
-      <textarea name="description" placeholder="Tavsif" class="rounded-lg border px-3 py-2"></textarea>
-      <input name="keywords" placeholder="Kalit so'zlar" class="rounded-lg border px-3 py-2">
-      <button class="rounded-lg bg-emerald-800 px-4 py-2 text-white">Saqlash</button>
-    </form>
-  </section>
-  <section class="rounded-xl border p-5">
-    <h2 class="text-xl font-semibold">Mavzular ro'yxati</h2>
-    <div class="mt-4 grid gap-3">{% for topic in topics %}<div class="rounded-lg bg-slate-50 p-3"><strong>{{ topic.title }}</strong><p class="text-sm text-slate-600">{{ topic.description }}</p></div>{% endfor %}</div>
-  </section>
+<h2 class="text-2xl font-bold">Mavzular</h2>
+<div class="mt-6 grid gap-6 lg:grid-cols-[380px_1fr]">
+  <form method="post" class="rounded-xl border bg-white p-5">
+    <select name="subject_id" class="w-full rounded-lg border px-3 py-2">{% for subject in subjects %}<option value="{{ subject.id }}">{{ subject.name }}</option>{% endfor %}</select>
+    <input name="title" required placeholder="Mavzu nomi" class="mt-3 w-full rounded-lg border px-3 py-2">
+    <textarea name="description" placeholder="Tavsif" class="mt-3 w-full rounded-lg border px-3 py-2"></textarea>
+    <textarea name="keywords" placeholder="Kalit so'zlar" class="mt-3 w-full rounded-lg border px-3 py-2"></textarea>
+    <button class="mt-3 rounded-lg bg-emerald-800 px-4 py-2 text-white">Saqlash</button>
+  </form>
+  <div class="rounded-xl border bg-white p-5">
+    {% for topic in topics %}
+    <div class="border-b py-3 last:border-0"><p class="font-semibold">{{ topic.title }}</p><p class="text-sm text-slate-500">{{ topic.description }}</p></div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}

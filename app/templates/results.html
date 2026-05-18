@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <h2 class="text-2xl font-bold">NLP natijalar</h2>
-<div class="mt-5 overflow-x-auto rounded-xl border">
+<div class="mt-6 overflow-hidden rounded-xl border bg-white">
   <table class="w-full text-left text-sm">
-    <thead class="bg-slate-50"><tr><th class="p-3">Resurs</th><th>Foiz</th><th>Status</th><th>Tavsiya</th></tr></thead>
-    <tbody>{% for item in resources %}<tr class="border-t"><td class="p-3">{{ item.title }}</td><td>{{ item.similarity_score }}%</td><td>{{ item.status }}</td><td>{{ item.recommendation }}</td></tr>{% endfor %}</tbody>
+    <thead class="bg-slate-100"><tr><th class="p-3">Resurs</th><th class="p-3">Foiz</th><th class="p-3">Status</th></tr></thead>
+    <tbody>{% for resource in resources %}<tr class="border-t"><td class="p-3">{{ resource.title }}</td><td class="p-3">{{ resource.similarity_score }}%</td><td class="p-3">{{ resource.status }}</td></tr>{% endfor %}</tbody>
   </table>
 </div>
 {% endblock %}
