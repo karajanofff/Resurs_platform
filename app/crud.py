@@ -11,8 +11,13 @@ def seed_initial_data(db: Session) -> None:
         ("Talaba", "student@example.com", "student123", "student"),
     ]
     for full_name, email, password, role in users:
-        if not db.query(User).filter(User.email == email).first():
+        existing_user = db.query(User).filter(User.email == email).first()
+        if not existing_user:
             db.add(User(full_name=full_name, email=email, password_hash=hash_password(password), role=role))
+        else:
+            existing_user.full_name = full_name
+            existing_user.password_hash = hash_password(password)
+            existing_user.role = role
     if not db.query(Subject).count():
         subjects = [
             Subject(name="Sun'iy intellekt", description="AI va NLP yo'nalishlari"),
