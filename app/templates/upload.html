@@ -4,8 +4,6 @@
 <form method="post" enctype="multipart/form-data" class="mt-6 max-w-2xl rounded-xl border bg-white p-5">
   {% if error %}<p class="mb-4 text-sm text-red-600">{{ error }}</p>{% endif %}
   <input name="title" required placeholder="Resurs nomi" class="w-full rounded-lg border px-3 py-2">
-  <select name="subject_id" class="mt-3 w-full rounded-lg border px-3 py-2">{% for subject in subjects %}<option value="{{ subject.id }}">{{ subject.name }}</option>{% endfor %}</select>
-  <select name="topic_id" class="mt-3 w-full rounded-lg border px-3 py-2">{% for topic in topics %}<option value="{{ topic.id }}">{{ topic.title }}</option>{% endfor %}</select>
   <input name="file" type="file" accept=".pdf,.docx,.pptx,.txt" required class="mt-3 block w-full rounded-lg border px-3 py-2">
   <button class="mt-4 rounded-lg bg-emerald-800 px-4 py-3 font-semibold text-white">NLP yordamida tahlil qilish</button>
 </form>

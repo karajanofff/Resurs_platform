@@ -48,6 +48,7 @@ class Resource(Base):
     topic_id = Column(Integer, ForeignKey("topics.id"), nullable=False)
     extracted_text = Column(Text, default="")
     keywords = Column(Text, default="")
+    predictions = Column(Text, default="[]")
     similarity_score = Column(Float, default=0)
     status = Column(String(40), default="Kutilmoqda")
     recommendation = Column(Text, default="")

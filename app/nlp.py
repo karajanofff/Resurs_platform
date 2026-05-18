@@ -65,3 +65,25 @@ def analyze_resource(resource_text: str, topic_title: str, topic_description: st
         "status": status,
         "recommendation": recommendation,
     }
+
+
+def classify_resource(resource_text: str, topics: list[dict]) -> list[dict]:
+    predictions = []
+    for topic in topics:
+        analysis = analyze_resource(resource_text, topic["title"], topic["description"], topic["keywords"])
+        predictions.append(
+            {
+                "subject_id": topic["subject_id"],
+                "subject_name": topic["subject_name"],
+                "topic_id": topic["topic_id"],
+                "topic_title": topic["title"],
+                **analysis,
+            }
+        )
+
+    best_by_subject = {}
+    for item in predictions:
+        current = best_by_subject.get(item["subject_id"])
+        if current is None or item["similarity_score"] > current["similarity_score"]:
+            best_by_subject[item["subject_id"]] = item
+    return sorted(best_by_subject.values(), key=lambda item: item["similarity_score"], reverse=True)

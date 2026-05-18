@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 from shutil import copyfileobj
@@ -14,7 +15,7 @@ from .crud import dashboard_stats, seed_data
 from .database import Base, SessionLocal, engine, get_db
 from .file_parser import extract_text_from_file
 from .models import Resource, Subject, Topic, User
-from .nlp import analyze_resource
+from .nlp import classify_resource
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -156,7 +157,7 @@ def upload_page(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse(
         request=request,
         name="upload.html",
-        context=context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all()),
+        context=context(request, user),
     )
 
 
@@ -164,21 +165,18 @@ def upload_page(request: Request, db: Session = Depends(get_db)):
 def upload_resource(
     request: Request,
     title: str = Form(...),
-    subject_id: int = Form(...),
-    topic_id: int = Form(...),
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
     user = require_user(request, db)
     if isinstance(user, RedirectResponse) or user.role not in {"admin", "teacher"}:
         return RedirectResponse("/login", status_code=303)
-    topic = db.get(Topic, topic_id)
     suffix = Path(file.filename or "").suffix.lower()
-    if suffix not in {".pdf", ".docx", ".pptx", ".txt"} or not topic or topic.subject_id != subject_id:
+    if suffix not in {".pdf", ".docx", ".pptx", ".txt"}:
         return templates.TemplateResponse(
             request=request,
             name="upload.html",
-            context=context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all(), error="Fayl turi yoki mavzu noto'g'ri"),
+            context=context(request, user, error="Faqat PDF, DOCX, PPTX yoki TXT fayl yuklang"),
             status_code=400,
         )
     safe_name = f"{Path(file.filename or 'resource').stem}-{uuid4().hex[:10]}{suffix}"
@@ -192,22 +190,46 @@ def upload_resource(
         return templates.TemplateResponse(
             request=request,
             name="upload.html",
-            context=context(request, user, subjects=db.query(Subject).all(), topics=db.query(Topic).all(), error="Fayldan matn ajratib bo'lmadi"),
+            context=context(request, user, error="Fayldan matn ajratib bo'lmadi"),
             status_code=400,
         )
-    analysis = analyze_resource(extracted_text, topic.title, topic.description, topic.keywords)
+    topics = db.query(Topic, Subject).join(Subject, Topic.subject_id == Subject.id).all()
+    predictions = classify_resource(
+        extracted_text,
+        [
+            {
+                "topic_id": topic.id,
+                "title": topic.title,
+                "description": topic.description,
+                "keywords": topic.keywords,
+                "subject_id": subject.id,
+                "subject_name": subject.name,
+            }
+            for topic, subject in topics
+        ],
+    )
+    if not predictions:
+        destination.unlink(missing_ok=True)
+        return templates.TemplateResponse(
+            request=request,
+            name="upload.html",
+            context=context(request, user, error="Tahlil uchun fan va mavzular topilmadi"),
+            status_code=400,
+        )
+    best = predictions[0]
     resource = Resource(
         title=title,
         file_path=safe_name,
         file_type=suffix[1:].upper(),
         uploaded_by=user.id,
-        subject_id=subject_id,
-        topic_id=topic_id,
+        subject_id=best["subject_id"],
+        topic_id=best["topic_id"],
         extracted_text=extracted_text,
-        keywords=", ".join(analysis["keywords"]),
-        similarity_score=analysis["similarity_score"],
-        status=analysis["status"],
-        recommendation=analysis["recommendation"],
+        keywords=", ".join(best["keywords"]),
+        predictions=json.dumps(predictions, ensure_ascii=False),
+        similarity_score=best["similarity_score"],
+        status=best["status"],
+        recommendation=best["recommendation"],
     )
     db.add(resource)
     db.commit()
@@ -226,7 +248,14 @@ def result_page(resource_id: int, request: Request, db: Session = Depends(get_db
     return templates.TemplateResponse(
         request=request,
         name="result.html",
-        context=context(request, user, resource=resource, subject=db.get(Subject, resource.subject_id), topic=db.get(Topic, resource.topic_id)),
+        context=context(
+            request,
+            user,
+            resource=resource,
+            subject=db.get(Subject, resource.subject_id),
+            topic=db.get(Topic, resource.topic_id),
+            predictions=json.loads(resource.predictions or "[]"),
+        ),
     )
 
 
