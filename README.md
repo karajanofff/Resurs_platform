@@ -51,6 +51,8 @@ git push -u origin main
 4. Render `render.yaml` faylidan servisni yaratadi.
 5. `SECRET_KEY` environment variable qo'shing.
 
+Agar Render servisi oldin `Docker` runtime bilan yaratilgan bo'lsa, rootdagi `Dockerfile` ham tayyor. Shu sabab mavjud Docker servisni o'chirmasdan ham deploy qilish mumkin.
+
 ## Demo loginlar
 
 - Admin: `admin@example.com / admin123`
