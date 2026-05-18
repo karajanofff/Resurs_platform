@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, Upload
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import inspect
 from sqlalchemy.orm import Session
 
 from .auth import create_access_token, decode_access_token, verify_password
@@ -27,6 +28,35 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 @app.on_event("startup")
 def startup() -> None:
+    inspector = inspect(engine)
+    expected_columns = {
+        "users": {"id", "full_name", "email", "password_hash", "role"},
+        "subjects": {"id", "name", "description"},
+        "topics": {"id", "subject_id", "title", "description", "keywords"},
+        "resources": {
+            "id",
+            "title",
+            "file_path",
+            "file_type",
+            "uploaded_by",
+            "subject_id",
+            "topic_id",
+            "extracted_text",
+            "keywords",
+            "similarity_score",
+            "status",
+            "recommendation",
+            "created_at",
+        },
+    }
+    existing_tables = set(inspector.get_table_names())
+    has_legacy_schema = any(
+        table in existing_tables
+        and not expected.issubset({column["name"] for column in inspector.get_columns(table)})
+        for table, expected in expected_columns.items()
+    )
+    if has_legacy_schema:
+        Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
@@ -38,7 +68,13 @@ def startup() -> None:
 def current_user(request: Request, db: Session) -> User | None:
     token = request.cookies.get("access_token")
     email = decode_access_token(token) if token else None
-    return db.query(User).filter(User.email == email).first() if email else None
+    if not email:
+        return None
+    try:
+        return db.query(User).filter(User.email == email).first()
+    except Exception:
+        db.rollback()
+        return None
 
 
 def require_user(request: Request, db: Session) -> User | RedirectResponse:
@@ -51,8 +87,8 @@ def page_context(request: Request, user: User | None = None, **extra):
 
 
 @app.get("/", response_class=HTMLResponse)
-def index(request: Request, db: Session = Depends(get_db)):
-    return templates.TemplateResponse("index.html", page_context(request, current_user(request, db)))
+def index(request: Request):
+    return templates.TemplateResponse("index.html", page_context(request))
 
 
 @app.get("/login", response_class=HTMLResponse)
