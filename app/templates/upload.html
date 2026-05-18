@@ -4,10 +4,10 @@
   <p class="muted-label">Avtomatik tahlil</p>
   <h2 class="page-title mt-1 text-3xl font-bold">Resurs yuklash</h2>
 </div>
-<form method="post" enctype="multipart/form-data" class="panel mt-6 max-w-2xl rounded-xl p-6">
+<form method="post" enctype="multipart/form-data" class="panel mt-6 max-w-2xl rounded-2xl p-6">
   {% if error %}<p class="mb-4 text-sm text-red-600">{{ error }}</p>{% endif %}
-  <input name="title" required placeholder="Resurs nomi" class="w-full rounded-lg border px-3 py-2">
-  <input name="file" type="file" accept=".pdf,.docx,.pptx,.txt" required class="mt-3 block w-full rounded-lg border px-3 py-2">
+  <label class="block text-sm font-medium text-slate-700">Resurs nomi<input name="title" required placeholder="Masalan: 3-ma'ruza" class="field mt-2"></label>
+  <label class="mt-4 block text-sm font-medium text-slate-700">Fayl<input name="file" type="file" accept=".pdf,.docx,.pptx,.txt" required class="field mt-2 block"></label>
   <button class="mt-4 rounded-lg bg-emerald-800 px-4 py-3 font-semibold text-white transition hover:bg-emerald-900">NLP yordamida tahlil qilish</button>
 </form>
 {% endblock %}

@@ -4,13 +4,13 @@
   <p class="muted-label">Elektron kutubxona</p>
   <h2 class="page-title mt-1 text-3xl font-bold">Resurslar katalogi</h2>
 </div>
-<form class="panel mt-6 grid gap-3 rounded-xl p-4 md:grid-cols-4">
-  <select name="subject_id" class="rounded-lg border px-3 py-2"><option value="">Barcha fanlar</option>{% for subject in subjects %}<option value="{{ subject.id }}">{{ subject.name }}</option>{% endfor %}</select>
-  <select name="topic_id" class="rounded-lg border px-3 py-2"><option value="">Barcha mavzular</option>{% for topic in topics %}<option value="{{ topic.id }}">{{ topic.title }}</option>{% endfor %}</select>
-  <select name="status" class="rounded-lg border px-3 py-2"><option value="">Barcha statuslar</option><option>Mos</option><option>Qisman mos</option><option>Mos emas</option></select>
+<form class="panel mt-6 grid gap-3 rounded-2xl p-4 md:grid-cols-4">
+  <select name="subject_id" class="field"><option value="">Barcha fanlar</option>{% for subject in subjects %}<option value="{{ subject.id }}">{{ subject.name }}</option>{% endfor %}</select>
+  <select name="topic_id" class="field"><option value="">Barcha mavzular</option>{% for topic in topics %}<option value="{{ topic.id }}">{{ topic.title }}</option>{% endfor %}</select>
+  <select name="status" class="field"><option value="">Barcha statuslar</option><option>Mos</option><option>Qisman mos</option><option>Mos emas</option></select>
   <button class="rounded-lg bg-emerald-800 px-4 py-2 text-white">Filtrlash</button>
 </form>
-<div class="panel mt-6 overflow-hidden rounded-xl">
+<div class="panel mt-6 overflow-hidden rounded-2xl">
   <table class="w-full text-left text-sm">
     <thead class="bg-slate-100"><tr><th class="p-3">Resurs</th><th class="p-3">Foiz</th><th class="p-3">Status</th><th class="p-3">Amallar</th></tr></thead>
     <tbody>
