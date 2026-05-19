@@ -1,12 +1,58 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="mb-6">
-  <p class="muted-label">Umumiy ko'rinish</p>
-  <h2 class="page-title mt-1 text-3xl font-bold">Dashboard</h2>
-</div>
+<section class="dashboard-hero rounded-2xl p-6 text-white">
+  <div class="max-w-3xl">
+    <p class="text-xs font-bold uppercase tracking-wide text-emerald-200">Umumiy ko'rinish</p>
+    <h2 class="mt-2 text-3xl font-bold">SmartKutubxona AI boshqaruv paneli</h2>
+    <p class="mt-3 max-w-2xl text-sm leading-6 text-emerald-50">Resurslarni yuklang, tizim ularni fanlar bilan avtomatik solishtiradi va moslik darajasini foizda chiqaradi.</p>
+  </div>
+  <div class="mt-6 flex flex-wrap gap-3">
+    {% if user.role in ["admin", "teacher"] %}<a href="/upload" class="rounded-lg bg-white px-4 py-2 font-semibold text-emerald-950">Resurs yuklash</a>{% endif %}
+    <a href="/resources" class="rounded-lg border border-white/30 px-4 py-2 font-semibold text-white">Katalogni ko'rish</a>
+  </div>
+</section>
+
 <div class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
   {% for label, value in [("Jami fanlar", stats.subjects), ("Jami mavzular", stats.topics), ("Jami resurslar", stats.resources), ("Mos", stats.matched), ("Qisman mos", stats.partial), ("Mos emas", stats.unmatched)] %}
-  <div class="panel metric-card rounded-2xl p-5"><p class="text-sm text-slate-500">{{ label }}</p><p class="mt-2 text-3xl font-bold">{{ value }}</p></div>
+  <div class="panel metric-card rounded-2xl p-5">
+    <p class="text-sm text-slate-500">{{ label }}</p>
+    <p class="mt-2 text-3xl font-bold">{{ value }}</p>
+  </div>
   {% endfor %}
+</div>
+
+<div class="mt-6 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+  <div class="panel rounded-2xl p-5">
+    <div class="flex items-center justify-between gap-4">
+      <div>
+        <p class="muted-label">So'nggi tahlillar</p>
+        <h3 class="mt-1 text-lg font-semibold">Yuklangan resurslar</h3>
+      </div>
+      <a href="/resources" class="text-sm font-semibold text-emerald-800">Barchasi</a>
+    </div>
+    <div class="mt-4 divide-y divide-slate-100">
+      {% for resource in latest_resources %}
+      <div class="flex items-center justify-between gap-4 py-3">
+        <div>
+          <p class="font-medium">{{ resource.title }}</p>
+          <p class="text-sm text-slate-500">{{ resource.status }}</p>
+        </div>
+        <span class="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800">{{ resource.similarity_score }}%</span>
+      </div>
+      {% else %}
+      <p class="py-6 text-sm text-slate-500">Hali resurs yuklanmagan.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="panel rounded-2xl p-5">
+    <p class="muted-label">Ishlash tartibi</p>
+    <h3 class="mt-1 text-lg font-semibold">Avtomatik NLP baholash</h3>
+    <div class="mt-4 space-y-4 text-sm text-slate-600">
+      <div class="flex gap-3"><span class="step-dot">1</span><p>PDF, DOCX, PPTX yoki TXT fayldan matn ajratiladi.</p></div>
+      <div class="flex gap-3"><span class="step-dot">2</span><p>Matn barcha fan mavzulari bilan TF-IDF orqali solishtiriladi.</p></div>
+      <div class="flex gap-3"><span class="step-dot">3</span><p>Eng mos fanlar foiz ko'rinishida saralanib natija qilinadi.</p></div>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -63,3 +63,22 @@ body {
   background: rgb(16 185 129 / 0.08);
   content: "";
 }
+
+.dashboard-hero {
+  background:
+    linear-gradient(135deg, rgb(2 44 34), rgb(6 95 70)),
+    radial-gradient(circle at top right, rgb(255 255 255 / 0.22), transparent 30%);
+  box-shadow: 0 24px 60px rgb(2 44 34 / 0.18);
+}
+
+.step-dot {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: rgb(209 250 229);
+  color: rgb(6 95 70);
+  font-weight: 700;
+}

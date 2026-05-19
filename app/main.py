@@ -94,7 +94,12 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse(
         request=request,
         name="dashboard.html",
-        context=context(request, user, stats=dashboard_stats(db)),
+        context=context(
+            request,
+            user,
+            stats=dashboard_stats(db),
+            latest_resources=db.query(Resource).order_by(Resource.created_at.desc()).limit(5).all(),
+        ),
     )
 
 
