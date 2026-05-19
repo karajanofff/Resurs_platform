@@ -1,4 +1,4 @@
-# SmartResurs
+# SmartResurs AI
 
 Aqlli ta'lim resurslari tahlilchisi.
 
