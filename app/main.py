@@ -103,6 +103,14 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
     )
 
 
+@app.get("/about", response_class=HTMLResponse)
+def about_page(request: Request, db: Session = Depends(get_db)):
+    user = require_user(request, db)
+    if isinstance(user, RedirectResponse):
+        return user
+    return templates.TemplateResponse(request=request, name="about.html", context=context(request, user))
+
+
 @app.get("/subjects", response_class=HTMLResponse)
 def subjects_page(request: Request, db: Session = Depends(get_db)):
     user = require_user(request, db)

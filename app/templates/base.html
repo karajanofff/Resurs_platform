@@ -19,6 +19,7 @@
     </div>
     <nav class="mt-8 grid gap-2 text-sm">
       <a href="/dashboard" class="rounded-xl px-3 py-2.5 hover:bg-white/10">Dashboard</a>
+      <a href="/about" class="rounded-xl px-3 py-2.5 hover:bg-white/10">Platforma haqida</a>
       {% if user.role == "admin" %}<a href="/subjects" class="rounded-xl px-3 py-2.5 hover:bg-white/10">Fanlar</a>{% endif %}
       {% if user.role == "admin" %}<a href="/topics" class="rounded-xl px-3 py-2.5 hover:bg-white/10">Mavzular</a>{% endif %}
       {% if user.role in ["admin", "teacher"] %}<a href="/upload" class="rounded-xl px-3 py-2.5 hover:bg-white/10">Resurs yuklash</a>{% endif %}

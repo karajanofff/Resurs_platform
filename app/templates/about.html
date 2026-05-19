@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="dashboard-hero rounded-2xl p-6 text-white">
+  <p class="text-xs font-bold uppercase tracking-wide text-emerald-200">Platforma haqida</p>
+  <h2 class="mt-2 text-3xl font-bold">SmartResurs</h2>
+  <p class="mt-3 max-w-3xl text-sm leading-6 text-emerald-50">SmartResurs — aqlli ta'lim resurslari tahlilchisi. Platforma yuklangan PDF, DOCX, PPTX yoki TXT fayllarni o'qib, ularning qaysi fanlarga ko'proq tegishli ekanini NLP yordamida avtomatik baholaydi.</p>
+</section>
+
+<div class="mt-6 grid gap-5 lg:grid-cols-3">
+  <div class="panel rounded-2xl p-5">
+    <p class="muted-label">Maqsad</p>
+    <h3 class="mt-2 text-lg font-semibold">Resurs mosligini aniqlash</h3>
+    <p class="mt-3 text-sm leading-6 text-slate-600">O'qituvchi resurs nomi va faylni yuklaydi. Tizim fan va mavzuni qo'lda tanlashni talab qilmaydi, moslikni o'zi hisoblaydi.</p>
+  </div>
+  <div class="panel rounded-2xl p-5">
+    <p class="muted-label">Texnologiya</p>
+    <h3 class="mt-2 text-lg font-semibold">TF-IDF + cosine similarity</h3>
+    <p class="mt-3 text-sm leading-6 text-slate-600">Og'ir AI model ishlatilmaydi. Matn tozalanadi, TF-IDF vektorlarga aylantiriladi va fan mavzulari bilan solishtiriladi.</p>
+  </div>
+  <div class="panel rounded-2xl p-5">
+    <p class="muted-label">Natija</p>
+    <h3 class="mt-2 text-lg font-semibold">Foizli baholash</h3>
+    <p class="mt-3 text-sm leading-6 text-slate-600">Natija fanlar bo'yicha reyting, eng yaqin mavzu, kalit so'zlar va tavsiya ko'rinishida chiqariladi.</p>
+  </div>
+</div>
+
+<div class="panel mt-6 rounded-2xl p-5">
+  <p class="muted-label">Foydalanuvchilar</p>
+  <div class="mt-4 grid gap-4 md:grid-cols-3">
+    <div class="rounded-xl bg-slate-50 p-4"><h4 class="font-semibold">Admin</h4><p class="mt-2 text-sm text-slate-600">Fanlar, mavzular, foydalanuvchilar va resurslarni boshqaradi.</p></div>
+    <div class="rounded-xl bg-slate-50 p-4"><h4 class="font-semibold">O'qituvchi</h4><p class="mt-2 text-sm text-slate-600">Ta'lim resurslarini yuklaydi va NLP tahlil natijasini oladi.</p></div>
+    <div class="rounded-xl bg-slate-50 p-4"><h4 class="font-semibold">Talaba</h4><p class="mt-2 text-sm text-slate-600">Katalogdagi mos resurslarni ko'radi va yuklab oladi.</p></div>
+  </div>
+</div>
+{% endblock %}
