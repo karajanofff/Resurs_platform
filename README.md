@@ -1,4 +1,6 @@
-# SmartKutubxona AI
+# SmartResurs
+
+Aqlli ta'lim resurslari tahlilchisi.
 
 Ta'lim resurslarining fan mavzulariga tegishliligini `TF-IDF` va `cosine similarity` yordamida avtomatik baholovchi yengil web-platforma.
 
