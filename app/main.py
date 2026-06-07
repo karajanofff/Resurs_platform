@@ -98,7 +98,11 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
             request,
             user,
             stats=dashboard_stats(db),
-            latest_resources=db.query(Resource).order_by(Resource.created_at.desc()).limit(5).all(),
+            latest_resources=db.query(Resource, Subject)
+            .join(Subject, Resource.subject_id == Subject.id)
+            .order_by(Resource.created_at.desc())
+            .limit(5)
+            .all(),
         ),
     )
 
@@ -288,21 +292,31 @@ def result_page(resource_id: int, request: Request, db: Session = Depends(get_db
 @app.get("/resources", response_class=HTMLResponse)
 def resources_page(
     request: Request,
-    subject_id: int | None = None,
-    topic_id: int | None = None,
+    subject_id: str | None = None,
+    topic_id: str | None = None,
     status: str | None = None,
     db: Session = Depends(get_db),
 ):
     user = require_user(request, db)
     if isinstance(user, RedirectResponse):
         return user
-    query = db.query(Resource)
-    if subject_id:
-        query = query.filter(Resource.subject_id == subject_id)
-    if topic_id:
-        query = query.filter(Resource.topic_id == topic_id)
-    if status:
-        query = query.filter(Resource.status == status)
+
+    selected_subject_id = int(subject_id) if subject_id and subject_id.isdigit() else None
+    selected_topic_id = int(topic_id) if topic_id and topic_id.isdigit() else None
+    selected_status = status.strip() if status and status.strip() else None
+
+    query = db.query(Resource, Subject).join(Subject, Resource.subject_id == Subject.id)
+    if selected_subject_id:
+        query = query.filter(Resource.subject_id == selected_subject_id)
+    if selected_topic_id:
+        query = query.filter(Resource.topic_id == selected_topic_id)
+    if selected_status:
+        query = query.filter(Resource.status == selected_status)
+
+    topics_query = db.query(Topic)
+    if selected_subject_id:
+        topics_query = topics_query.filter(Topic.subject_id == selected_subject_id)
+
     return templates.TemplateResponse(
         request=request,
         name="resources.html",
@@ -311,7 +325,10 @@ def resources_page(
             user,
             resources=query.order_by(Resource.created_at.desc()).all(),
             subjects=db.query(Subject).all(),
-            topics=db.query(Topic).all(),
+            topics=topics_query.all(),
+            selected_subject_id=selected_subject_id,
+            selected_topic_id=selected_topic_id,
+            selected_status=selected_status,
         ),
     )
 

@@ -4,19 +4,36 @@
   <p class="muted-label">Elektron kutubxona</p>
   <h2 class="page-title mt-1 text-3xl font-bold">Resurslar katalogi</h2>
 </div>
-<form class="panel mt-6 grid gap-3 rounded-2xl p-4 md:grid-cols-4">
-  <select name="subject_id" class="field"><option value="">Barcha fanlar</option>{% for subject in subjects %}<option value="{{ subject.id }}">{{ subject.name }}</option>{% endfor %}</select>
-  <select name="topic_id" class="field"><option value="">Barcha mavzular</option>{% for topic in topics %}<option value="{{ topic.id }}">{{ topic.title }}</option>{% endfor %}</select>
-  <select name="status" class="field"><option value="">Barcha statuslar</option><option>Mos</option><option>Qisman mos</option><option>Mos emas</option></select>
-  <button class="rounded-lg bg-emerald-800 px-4 py-2 text-white">Filtrlash</button>
+<form method="get" action="/resources" class="panel mt-6 grid gap-3 rounded-2xl p-4 md:grid-cols-4">
+  <select name="subject_id" class="field">
+    <option value="">Barcha fanlar</option>
+    {% for subject in subjects %}
+    <option value="{{ subject.id }}" {% if selected_subject_id == subject.id %}selected{% endif %}>{{ subject.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="topic_id" class="field">
+    <option value="">Barcha mavzular</option>
+    {% for topic in topics %}
+    <option value="{{ topic.id }}" {% if selected_topic_id == topic.id %}selected{% endif %}>{{ topic.title }}</option>
+    {% endfor %}
+  </select>
+  <select name="status" class="field">
+    <option value="">Barcha statuslar</option>
+    <option value="Mos" {% if selected_status == "Mos" %}selected{% endif %}>Mos</option>
+    <option value="Qisman mos" {% if selected_status == "Qisman mos" %}selected{% endif %}>Qisman mos</option>
+    <option value="Mos emas" {% if selected_status == "Mos emas" %}selected{% endif %}>Mos emas</option>
+  </select>
+  <button type="submit" class="rounded-lg bg-emerald-800 px-4 py-2 text-white">Filtrlash</button>
 </form>
 <div class="panel mt-6 overflow-hidden rounded-2xl">
   <table class="w-full text-left text-sm">
     <thead class="bg-slate-100"><tr><th class="p-3">Resurs</th><th class="p-3">Foiz</th><th class="p-3">Status</th><th class="p-3">Amallar</th></tr></thead>
     <tbody>
-      {% for resource in resources %}
+      {% for resource, subject in resources %}
       <tr class="border-t">
-        <td class="p-3">{{ resource.title }}</td>
+        <td class="p-3">
+          <p class="font-medium">{{ subject.name }} — {{ resource.title }}</p>
+        </td>
         <td class="p-3">{{ resource.similarity_score }}%</td>
         <td class="p-3"><span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">{{ resource.status }}</span></td>
         <td class="p-3">
@@ -29,6 +46,10 @@
             {% endif %}
           </div>
         </td>
+      </tr>
+      {% else %}
+      <tr class="border-t">
+        <td class="p-3 text-slate-500" colspan="4">Tanlangan filter bo'yicha resurs topilmadi.</td>
       </tr>
       {% endfor %}
     </tbody>

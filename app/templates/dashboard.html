@@ -31,10 +31,10 @@
       <a href="/resources" class="text-sm font-semibold text-emerald-800">Barchasi</a>
     </div>
     <div class="mt-4 divide-y divide-slate-100">
-      {% for resource in latest_resources %}
+      {% for resource, subject in latest_resources %}
       <div class="flex items-center justify-between gap-4 py-3">
         <div>
-          <p class="font-medium">{{ resource.title }}</p>
+          <p class="font-medium">{{ subject.name }} — {{ resource.title }}</p>
           <p class="text-sm text-slate-500">{{ resource.status }}</p>
         </div>
         <span class="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800">{{ resource.similarity_score }}%</span>
