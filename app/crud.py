@@ -27,8 +27,8 @@ def seed_data(db: Session) -> None:
     db.flush()
     db.add_all(
         [
-            Topic(subject_id=subjects[0].id, title="NLP texnologiyalari", description="tokenizatsiya tf idf tabiiy tilni qayta ishlash", keywords="nlp tokenizatsiya tf idf"),
-            Topic(subject_id=subjects[0].id, title="Mashinali o'rganish", description="klassifikatsiya regressiya model trening", keywords="machine learning klassifikatsiya regressiya"),
+            Topic(subject_id=subjects[0].id, title="NLP texnologiyalari", description="tokenizatsiya tf idf tabiiy tilni qayta ishlash matn tahlili", keywords="nlp tokenizatsiya tf idf tabiiy til suniy intellekt inson intellekt kompyuter"),
+            Topic(subject_id=subjects[0].id, title="Mashinali o'rganish", description="klassifikatsiya regressiya model trening neyron tarmoq", keywords="machine learning klassifikatsiya regressiya suniy intellekt model neyron"),
             Topic(subject_id=subjects[1].id, title="Normalizatsiya", description="jadval bog'lanish normal forma", keywords="jadval normalizatsiya"),
             Topic(subject_id=subjects[1].id, title="SQL so'rovlari", description="select join group by indeks", keywords="sql select join indeks"),
             Topic(subject_id=subjects[2].id, title="Tarmoq xavfsizligi", description="vpn firewall shifrlash", keywords="vpn firewall"),

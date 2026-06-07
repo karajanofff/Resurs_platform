@@ -15,7 +15,7 @@ from .crud import dashboard_stats, seed_data
 from .database import Base, SessionLocal, engine, get_db
 from .file_parser import extract_text_from_file
 from .models import Resource, Subject, Topic, User
-from .nlp import classify_resource
+from .nlp import classify_resource, clean_text
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -206,6 +206,18 @@ def upload_resource(
             context=context(request, user, error="Fayldan matn ajratib bo'lmadi"),
             status_code=400,
         )
+    if len(clean_text(extracted_text)) < 30:
+        destination.unlink(missing_ok=True)
+        return templates.TemplateResponse(
+            request=request,
+            name="upload.html",
+            context=context(
+                request,
+                user,
+                error="Fayldan yetarli matn o'qilmadi. Matnli PDF/DOCX/PPTX yoki TXT fayl yuklang.",
+            ),
+            status_code=400,
+        )
     topics = db.query(Topic, Subject).join(Subject, Topic.subject_id == Subject.id).all()
     predictions = classify_resource(
         extracted_text,
@@ -217,6 +229,7 @@ def upload_resource(
                 "keywords": topic.keywords,
                 "subject_id": subject.id,
                 "subject_name": subject.name,
+                "subject_description": subject.description,
             }
             for topic, subject in topics
         ],
